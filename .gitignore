@@ -12,7 +12,6 @@
 venv/
 
 migrations/*
-!migrations/__init__.py
 
 # Distribution / packaging
 .Python
