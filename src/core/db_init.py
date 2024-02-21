@@ -9,7 +9,7 @@ class DatabaseInit:
     def __init__(self) -> None:
         self.engine = create_async_engine(
             url=settings.DATABASE_URL_asyncpg,
-            echo=True,
+            echo=False,
         )
 
         self.session_factory = async_sessionmaker(

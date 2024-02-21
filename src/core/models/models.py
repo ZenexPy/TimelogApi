@@ -1,7 +1,6 @@
 from sqlalchemy import TIMESTAMP, MetaData, Table, Column, Integer, String, JSON, ForeignKey
 from sqlalchemy import Boolean, ForeignKey, Integer, String, func
 from sqlalchemy.orm import relationship, DeclarativeBase, declared_attr, Mapped, mapped_column
-from sqlalchemy.dialects.postgresql import JSONB
 from datetime import datetime
 
 
