@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, status, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from . import crud
 from .schemas import Product, ProductUpdatePartial, ProductBase
-from core.db_init import db_init
+from ..core.db_init import db_init
 from .dependencies import get_product_by_id
 
 router = APIRouter(tags=["Products"])
@@ -10,11 +10,11 @@ router = APIRouter(tags=["Products"])
 
 @router.get("/", response_model=list[Product])
 async def get_products(session: AsyncSession = Depends(db_init.session_dependency)):
-    return await crud.get_product(session=session)
+    return await crud.get_products(session=session)
 
 
 @router.post("/", response_model=Product, status_code=status.HTTP_201_CREATED)
-async def create_product(product_in: Product, session: AsyncSession = Depends(db_init.session_dependency)):
+async def create_product(product_in: ProductBase, session: AsyncSession = Depends(db_init.session_dependency)):
     return await crud.create_product(session=session, product_in=product_in)
 
 
