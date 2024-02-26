@@ -5,7 +5,7 @@ from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
-from src.core.models.models import Base
+from src.core.models.base import Base
 
 from env_config import DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_USER
 
