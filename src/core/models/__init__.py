@@ -5,7 +5,7 @@ __all__ = (
     "TimeLog",
     "Position",
     "Project",
-    "timelog_project_assosiation_table",
+    "TimelogProjectAssociation",
 )
 
 from .base import Base
@@ -14,4 +14,4 @@ from .project import Project
 from .role import Role
 from .timelog import TimeLog
 from .user import User
-from .association_tables import timelog_project_assosiation_table
+from .association_tables import TimelogProjectAssociation

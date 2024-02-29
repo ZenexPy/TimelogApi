@@ -20,7 +20,7 @@ class User(Base):
     second_name: Mapped[str] = mapped_column(String(75), nullable=False)
     password: Mapped[str] = mapped_column(String(20), nullable=False)
     registered_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now(), nullable=False)
+        DateTime(timezone=True), server_default=func.now(), default=datetime.utcnow(), nullable=False)
     is_active: Mapped[bool] = mapped_column(nullable=False)
 
     role_fk: Mapped[int] = mapped_column(ForeignKey('role.id'))

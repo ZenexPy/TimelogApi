@@ -1,9 +1,11 @@
-from typing import Optional
+from typing import TYPE_CHECKING
 from sqlalchemy import ForeignKey, DateTime, func, String
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from datetime import datetime
 from .base import Base
-from .user import User
+
+if TYPE_CHECKING:
+    from .user import User
 
 
 class Role(Base):

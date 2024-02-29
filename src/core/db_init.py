@@ -11,7 +11,7 @@ class DatabaseInit:
     def __init__(self) -> None:
         self.engine = create_async_engine(
             url=settings.DATABASE_URL_asyncpg,
-            echo=False,
+            echo=True,
         )
 
         self.session_factory = async_sessionmaker(
