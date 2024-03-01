@@ -1,6 +1,13 @@
 from pathlib import Path
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import BaseModel
 
+BASE_DIR = Path(__file__).parent.parent
+
+class AuthJWT(BaseModel):
+    private_key_path: Path = BASE_DIR / "secret" / "jwt-private.pem"
+    public_key_path: Path = BASE_DIR / "secret" / "jwt-public.pem"
+    algorithm: str = "RS256"
 
 class Settings(BaseSettings):
     POSTGRES_HOST: str
@@ -8,6 +15,8 @@ class Settings(BaseSettings):
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
     POSTGRES_DB: str
+
+    auth_jwt: AuthJWT = AuthJWT()
 
     @property
     def DATABASE_URL_asyncpg(self):

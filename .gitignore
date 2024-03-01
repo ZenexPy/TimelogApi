@@ -81,6 +81,8 @@ media
 # Icon must end with two \r
 Icon
 
+# .pem
+secret/
 
 # Thumbnails
 ._*
