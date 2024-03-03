@@ -1,6 +1,5 @@
 __all__ = (
     "Base",
-    "Role",
     "User",
     "TimeLog",
     "Position",
@@ -11,7 +10,6 @@ __all__ = (
 from .base import Base
 from .position import Position
 from .project import Project
-from .role import Role
 from .timelog import TimeLog
 from .user import User
 from .association_tables import TimelogProjectAssociation

@@ -3,33 +3,26 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict
 
 
-class ProjectBase(BaseModel):
-
-    secret_name: str
-
-
-class Project(ProjectBase):
-    model_config = ConfigDict(from_attributes=True)
-
-    id: int
-
-
-class ProjectGet(Project):
-
-    started_at: datetime
-
-
-class ProjectCreate(ProjectBase):
+class TimeLogBase(BaseModel):
     pass
 
 
-class ProjectUpdate(ProjectBase):
-    started_at: datetime
+class TimeLogGet(TimeLogBase):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    user_fk: int
+    end_time: datetime | None = None
+    start_time: datetime
 
 
-class ProjectUpdatePartial(ProjectBase):
-    secret_name: str | None = None
-    started_at: datetime | None = None
-
-
-
+class TimeLogCreate(TimeLogBase):
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    'message': "Execute endpoint to open timelog record"
+                }
+            ]
+        }
+    }

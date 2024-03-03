@@ -1,37 +1,46 @@
-from sqlalchemy import select, Result
+from datetime import datetime, timezone
+
+from sqlalchemy import and_, select
 from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi import HTTPException, status
+from .schemas import TimeLogCreate
+from .dependencies import find_open_timelog
 
-from .schemas import ProjectCreate, Project, ProjectUpdate, ProjectUpdatePartial, ProjectGet
+from ..core.models.timelog import TimeLog
+from ..core.models.user import User
 
-from ..core.models.project import Project as Project_model
 
+async def create_timelog(session: AsyncSession, create_model: TimeLogCreate, user: User) -> TimeLog:
+    current_user_id = user.id
 
-async def create_project(session: AsyncSession, create_model: ProjectCreate) -> Project_model:
-    project = Project_model(**create_model.model_dump())
-    session.add(project)
+    open_timelog = await find_open_timelog(session=session, user=user)
+
+    if open_timelog:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="You already have an open TimeLog. Please close it before creating a new one."
+        )
+    
+    timelog_data = create_model.model_dump(
+        exclude_unset=True)
+    timelog_data['user_fk'] = current_user_id
+    timelog = TimeLog(**timelog_data)
+    session.add(timelog)
     await session.commit()
 
-    return project
+    return timelog
 
 
-async def get_project_one(project_id: int , session: AsyncSession) -> Project_model | None:
-    return await session.get(Project_model, project_id)
+async def close_timelog(session: AsyncSession, user: User):
+    open_timelog = await find_open_timelog(session=session, user=user)
 
+    if open_timelog is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="No open timelog found for the user"
+        )
 
-async def get_project_all(session: AsyncSession) -> list[Project_model]:
-    stmt = select(Project_model).order_by(Project_model.id)
-    result: Result = await session.execute(stmt)
-    projects = result.scalars().all()
-    return list(projects)
-
-
-async def delete_project(project: Project, session: AsyncSession) -> None:
-    await session.delete(project)
+    open_timelog.end_time = datetime.now(timezone.utc)
     await session.commit()
 
-
-async def update_project(session: AsyncSession, project: ProjectGet, project_update: ProjectUpdate | ProjectUpdatePartial, partial: bool = False) -> Project_model:
-    for name, value in project_update.model_dump(exclude_unset=partial).items():
-        setattr(project, name, value)
-    await session.commit()
-    return project
+    return open_timelog

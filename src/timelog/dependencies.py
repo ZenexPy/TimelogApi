@@ -1,16 +1,30 @@
 from fastapi import Path, Depends, HTTPException, status
-
+from sqlalchemy import and_, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import Annotated
-from ..core.db_init import db_init
-from . import crud
-from ..core.models.project import Project as Project_model
 
+from ..auth import manager
+from ..auth.jwt_auth import auth_backend
+from ..core.models.user import User
+from ..core.models.timelog import TimeLog
 
-async def get_project_by_id(project_id: Annotated[int, Path], session: AsyncSession = Depends(db_init.session_dependency)) -> Project_model:
-    project = await crud.get_project_one(session=session, project_id=project_id)
-    if project is not None:
-        return project
-    raise HTTPException(
-        status_code=status.HTTP_404_NOT_FOUND,
+from fastapi_users import FastAPIUsers
+
+def get_current_user():
+    fastapi_users = FastAPIUsers[User, int](
+        manager.get_user_manager,
+        [auth_backend],
     )
+    current_user = fastapi_users.current_user()
+    return current_user
+
+
+async def find_open_timelog(session: AsyncSession, user: User):
+    open_timelog = await session.execute(
+        select(TimeLog).where(
+            and_(
+                TimeLog.user_fk == user.id,
+                TimeLog.end_time.is_(None)
+            )
+        ).order_by(TimeLog.start_time.desc()).limit(1)
+    )
+    return open_timelog.scalar_one_or_none()
