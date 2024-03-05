@@ -14,15 +14,9 @@ class TimeLogGet(TimeLogBase):
     user_fk: int
     end_time: datetime | None = None
     start_time: datetime
+    project_fk: int
 
 
 class TimeLogCreate(TimeLogBase):
-    model_config = {
-        "json_schema_extra": {
-            "examples": [
-                {
-                    'message': "Execute endpoint to open timelog record"
-                }
-            ]
-        }
-    }
+    project_fk: int
+    

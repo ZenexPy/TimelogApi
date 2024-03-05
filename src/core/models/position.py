@@ -15,7 +15,7 @@ class Position(Base):
     description: Mapped[str] = mapped_column(String(200), nullable=True)
     salary: Mapped[int] = mapped_column(default=0)
 
-    user: Mapped[list["User"]] = relationship(back_populates="position", uselist=False)
+    user: Mapped[list["User"]] = relationship(back_populates="position", uselist=True)
 
     def __str__(self) -> str:
         return f"({self.id}) | {self.__class__.__name__.lower()} - ({self.title})"

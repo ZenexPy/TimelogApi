@@ -9,7 +9,7 @@ from ..core.models.user import User
 from ..core.db_init import db_init
 from ..core.config import settings
 
-SECRET = '!q2W#e4R$t6Y^u8I&i0O'
+#SECRET = '!q2W#e4R$t6Y^u8I&i0O'
 
 
 def get_user_db(session: AsyncSession = Depends(db_init.session_dependency)):

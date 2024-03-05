@@ -19,8 +19,9 @@ class TimeLog(Base):
     start_time: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), default=datetime.now(timezone.utc), nullable=False)
     end_time: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+    project_fk: Mapped[int] = mapped_column(ForeignKey('project.id'))
 
-    project: Mapped[list["Project"]] = relationship(
-        secondary="timelog_project_association_table", back_populates="timelog")
-    user: Mapped[list["User"]] = relationship(
-        back_populates="timelog", uselist=True)
+    project: Mapped["Project"] = relationship(
+        back_populates="timelog", uselist=False)
+    user: Mapped["User"] = relationship(
+        back_populates="timelog", uselist=False)

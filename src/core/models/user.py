@@ -32,10 +32,10 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     position_fk: Mapped[int] = mapped_column(ForeignKey('position.id'), nullable=False)
 
     timelog: Mapped[list["TimeLog"]] = relationship(
-        back_populates="user", uselist=False)
+        back_populates="user", uselist=True)
 
     position: Mapped["Position"] = relationship(
-        back_populates="user", uselist=True
+        back_populates="user", uselist=False
     )
 
     def __str__(self) -> str:
