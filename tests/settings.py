@@ -2,14 +2,12 @@ from asyncio import current_task
 
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, async_scoped_session
 
-from .config import settings
-
 
 class DatabaseInit:
 
     def __init__(self) -> None:
         self.engine = create_async_engine(
-            url=settings.DATABASE_URL_asyncpg,
+            url=f"postgresql+asyncpg://postgres_test:postgres_test@localhost:5433/postgres_test",
             echo=True,
         )
 
@@ -33,4 +31,4 @@ class DatabaseInit:
         await session.close()
 
 
-db_init = DatabaseInit()
+db_init_test = DatabaseInit()

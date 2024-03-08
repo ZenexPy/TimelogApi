@@ -5,8 +5,10 @@ from fastapi_users import schemas
 from pydantic import EmailStr, BaseModel
 from typing import Any, Dict, Generic, List, Optional, Type, TypeVar
 
+
 from pydantic import BaseModel, ConfigDict, EmailStr
 from pydantic.version import VERSION as PYDANTIC_VERSION
+
 
 from fastapi_users import models
 
@@ -31,7 +33,10 @@ else:  # pragma: no cover  # type: ignore
         return schema.from_orm(obj)  # type: ignore
 
 
-class UserRead(schemas.BaseUser[int]):
+
+
+
+class UserReadGet(schemas.BaseUser[int]):
     id: int
     email: EmailStr
     username: str
@@ -39,6 +44,16 @@ class UserRead(schemas.BaseUser[int]):
     is_superuser: bool = False
     is_verified: bool = False
     position: str
+
+
+class UserRead(schemas.BaseUser[int]):
+    id: int
+    email: EmailStr
+    username: str
+    is_active: bool = True
+    is_superuser: bool = False
+    is_verified: bool = False
+    position_fk: int
 
 
 class UserCreateCustom(schemas.CreateUpdateDictModel):
