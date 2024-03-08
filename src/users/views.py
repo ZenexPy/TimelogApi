@@ -1,7 +1,7 @@
 from src.auth import manager
 from src.users import schemas
 from src.auth.jwt_auth import auth_backend
-from .schemas import UserRead
+from .schemas import UserRead, UserReadGet
 from sqlalchemy.ext.asyncio import AsyncSession
 from ..core.db_init import db_init
 from ..core.models.user import User
@@ -22,12 +22,14 @@ auth_router.include_router(
 )
 
 
-@auth_router.get("/", response_model=list[UserRead])
+
+
+@auth_router.get("/", response_model=list[UserReadGet])
 async def get_all_users(session: AsyncSession = Depends(db_init.session_dependency),
                         user: User = Depends(current_user)):
     return await crud.get_users(session=session, user=user)
 
 
-@auth_router.get("/{user_id}/", response_model=UserRead)
+@auth_router.get("/{user_id}/", response_model=UserReadGet)
 async def get_authorized_user(session: AsyncSession = Depends(db_init.session_dependency), user: User = Depends(current_user)):
     return await crud.get_user(session=session, user=user)
