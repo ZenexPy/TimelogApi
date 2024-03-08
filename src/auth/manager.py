@@ -29,12 +29,14 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
         if existing_user is not None:
             raise exceptions.UserAlreadyExists()
         
-        positions_id = await check_position_id(session=db_init.get_scoped_session())
+        session = db_init.get_scoped_session()
+        positions_id = await check_position_id(session=session)
         if user_create.position_fk not in positions_id:
             raise HTTPException(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                 detail="Use existing position_fk"
             )
+        session.close()
 
         user_dict = (
             user_create.create_update_dict()
